@@ -184,7 +184,7 @@ export default function RoomPage({ params }: { params: { code: string } }) {
 
   const opponent = players.find((p) => p.user_id !== myUserId);
 
-  if (room.status === "playing" && myUserId) {
+  if (room && room.status === "playing" && myUserId) {
     return (
       <main className="min-h-screen">
         <GameTable room={room} players={players} myUserId={myUserId} />

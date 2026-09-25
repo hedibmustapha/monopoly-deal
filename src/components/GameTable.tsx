@@ -418,7 +418,7 @@ export default function GameTable({
         />
       )}
 
-      {payOpen && myBoard && state.pending_action && (
+      {payOpen && myBoard && state.pending_action?.type === "payment_demand" && (
         <PaymentModal
           board={myBoard}
           amountOwed={state.pending_action.amount}

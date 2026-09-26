@@ -146,14 +146,18 @@ const COLOR_DEFS: Record<PropertyColor, ColorDef> = {
 };
 
 // Two-color wildcards + the 2 fully-wild ("any color") cards.
-const WILDCARD_DEFS: { colors: PropertyColor[]; count: number }[] = [
-  { colors: ["lightblue", "brown"], count: 1 },
-  { colors: ["pink", "orange"], count: 2 },
-  { colors: ["red", "yellow"], count: 2 },
-  { colors: ["green", "darkblue"], count: 1 },
-  { colors: ["railroad", "lightblue"], count: 1 },
-  { colors: ["railroad", "green"], count: 1 },
-  { colors: ["railroad", "utility"], count: 1 },
+const WILDCARD_DEFS: {
+  colors: PropertyColor[];
+  count: number;
+  value: number;
+}[] = [
+  { colors: ["lightblue", "brown"], count: 1, value: 1 },
+  { colors: ["pink", "orange"], count: 2, value: 2 },
+  { colors: ["red", "yellow"], count: 2, value: 3 },
+  { colors: ["green", "darkblue"], count: 1, value: 4 },
+  { colors: ["railroad", "lightblue"], count: 1, value: 4 },
+  { colors: ["railroad", "green"], count: 1, value: 4 },
+  { colors: ["railroad", "utility"], count: 1, value: 2 },
   {
     colors: [
       "brown",
@@ -168,6 +172,7 @@ const WILDCARD_DEFS: { colors: PropertyColor[]; count: number }[] = [
       "utility",
     ],
     count: 2,
+    value: 0,
   },
 ];
 
@@ -261,7 +266,7 @@ export function buildFullDeck(): Card[] {
             ? "Property Wildcard (any color)"
             : `${COLOR_LABEL[w.colors[0]]} / ${COLOR_LABEL[w.colors[1]]} Wildcard`,
         colors: w.colors,
-        value: w.colors.length > 2 ? 0 : 1,
+        value: w.value,
       });
     }
   }

@@ -482,39 +482,73 @@ function VisualCard({ card, small = false, back = false, selected = false, onCli
   );
 
   if (card.kind === "wildcard") {
-    const isAllColors = card.colors.length > 2;
-    return (
-      <button onClick={onClick} className={`${base} overflow-hidden bg-[#eee7d8] p-1.5 text-felt`}>
-        <div className="relative flex h-full flex-col items-center justify-between overflow-hidden rounded-[10px] border-2 border-felt/20 bg-[#f8f3e6] p-2">
-          {!isAllColors ? (
-            <>
-              <div className="absolute inset-x-0 top-0 h-9 flex">
-                <div className="flex-1" style={{ backgroundColor: propertyTone(card.colors[0]) }} />
-                <div className="flex-1" style={{ backgroundColor: propertyTone(card.colors[1]) }} />
-              </div>
-              <div className="absolute inset-x-0 top-9 h-px bg-black/20" />
-            </>
-          ) : (
-            <div className="absolute left-2 right-2 top-2 flex flex-wrap justify-center gap-1">
-              {card.colors.map((c) => (
-                <span key={c} title={COLOR_LABEL[c]} className="h-2.5 w-2.5 rounded-sm border border-black/15 shadow-sm" style={{ backgroundColor: propertyTone(c) }} />
-              ))}
-            </div>
-          )}
-          <span className={`${!isAllColors ? "mt-5" : "mt-5"} z-10 rounded-full bg-white/90 px-2 py-0.5 text-[7px] font-black uppercase shadow-sm`}>Property Wild</span>
-          <span className="z-10 text-center text-[9px] font-black leading-tight">{card.name}</span>
-          <div className="z-10 rounded-lg bg-white/90 px-2 py-1 text-center text-[7px] font-bold shadow-sm">{isAllColors ? "ANY COLOR" : card.colors.map((c) => COLOR_LABEL[c]).join(" / ")}</div>
-          <span className="z-10 text-lg font-black">{card.value}M</span>
-          {!isAllColors && (
-            <div className="absolute inset-x-0 bottom-0 h-9 flex">
-              <div className="flex-1" style={{ backgroundColor: propertyTone(card.colors[0]) }} />
-              <div className="flex-1" style={{ backgroundColor: propertyTone(card.colors[1]) }} />
-            </div>
-          )}
-        </div>
-      </button>
-    );
-  }
+  const isAllColors = card.colors.length > 2;
+
+  return (
+    <button
+      onClick={onClick}
+      className={`${base} overflow-hidden bg-[#eee7d8] p-1.5 text-felt`}
+    >
+      <div className="relative flex h-full flex-col items-center justify-between overflow-hidden rounded-[10px] border-2 border-felt/20 bg-[#f8f3e6] p-2">
+
+        {/* TOP COLOR AREA */}
+        {!isAllColors ? (
+          <div
+            className="absolute inset-x-0 top-0 h-9"
+            style={{ backgroundColor: propertyTone(card.colors[0]) }}
+          />
+        ) : (
+          <div
+            className="absolute inset-x-0 top-0 h-9"
+            style={{
+              background: `linear-gradient(
+                to right,
+                ${ALL_PROPERTY_COLORS.map((c) => propertyTone(c)).join(", ")}
+              )`,
+            }}
+          />
+        )}
+
+        {/* TOP/BOTTOM COLOR SEPARATOR */}
+        <div className="absolute inset-x-0 top-9 h-px bg-black/20" />
+
+        {/* CARD TITLE */}
+        <span className="z-10 mt-5 rounded-full bg-white/90 px-2 py-0.5 text-[7px] font-black uppercase shadow-sm">
+          Property Wild
+        </span>
+
+        {/* COLOR DESCRIPTION */}
+        <span className="z-10 text-center text-[9px] font-black leading-tight">
+          {card.name}
+        </span>
+
+        {/* VALUE */}
+        <span className="z-10 text-lg font-black">
+          {card.value}M
+        </span>
+
+        {/* BOTTOM COLOR AREA */}
+        {!isAllColors ? (
+          <div
+            className="absolute inset-x-0 bottom-0 h-9"
+            style={{ backgroundColor: propertyTone(card.colors[1]) }}
+          />
+        ) : (
+          <div
+            className="absolute inset-x-0 bottom-0 h-9"
+            style={{
+              background: `linear-gradient(
+                to right,
+                ${ALL_PROPERTY_COLORS.map((c) => propertyTone(c)).join(", ")}
+              )`,
+            }}
+          />
+        )}
+
+      </div>
+    </button>
+  );
+}
 
   const actionMeta: Record<string, { bg: string; accent: string; icon: string; subtitle: string }> = {
     deal_breaker: {bg:"#b92d38",accent:"#ffd86b",icon:"✦",subtitle:"TAKE A COMPLETE SET"},
@@ -539,18 +573,33 @@ function VisualCard({ card, small = false, back = false, selected = false, onCli
       {isRentCard ? (
         <div className="flex flex-1 items-center justify-center">
           {card.action === "rent" ? (
-            <div className="relative h-16 w-16 overflow-hidden rounded-xl border-2 border-white/80 shadow-lg">
-              <div className="absolute inset-y-0 left-0 w-1/2" style={{ backgroundColor: propertyTone(rentColors[0]) }} />
-              <div className="absolute inset-y-0 right-0 w-1/2" style={{ backgroundColor: propertyTone(rentColors[1]) }} />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="rounded-md bg-white/90 px-1.5 py-1 text-[10px] font-black text-felt shadow">RENT</span>
-              </div>
-            </div>
+            <div className="relative h-16 w-16 overflow-hidden rounded-full border-2 border-white/80 shadow-lg">
+  <div
+    className="absolute inset-y-0 left-0 w-1/2"
+    style={{ backgroundColor: propertyTone(rentColors[0]) }}
+  />
+  <div
+    className="absolute inset-y-0 right-0 w-1/2"
+    style={{ backgroundColor: propertyTone(rentColors[1]) }}
+  />
+  <div className="absolute inset-0 flex items-center justify-center">
+    <span className="rounded-full bg-white/95 px-2 py-1 text-[10px] font-black text-felt shadow">
+      RENT
+    </span>
+  </div>
+</div>
           ) : (
             <div className="relative flex h-16 w-16 items-center justify-center rounded-full border-2 border-white/80 bg-white/10 p-2 shadow-lg">
-              <div className="absolute inset-1 flex flex-wrap items-center justify-center gap-0.5 rounded-full">
-                {ALL_PROPERTY_COLORS.map((c) => <span key={c} className="h-3 w-3 rounded-sm border border-black/15" style={{ backgroundColor: propertyTone(c) }} />)}
-              </div>
+              <div
+  className="absolute inset-1 rounded-full"
+  style={{
+    background: `conic-gradient(
+      ${ALL_PROPERTY_COLORS.map((c, i) =>
+        `${propertyTone(c)} ${(i / ALL_PROPERTY_COLORS.length) * 100}% ${((i + 1) / ALL_PROPERTY_COLORS.length) * 100}%`
+      ).join(", ")}
+    )`,
+  }}
+/>
               <span className="relative z-10 rounded-md bg-white/95 px-1.5 py-1 text-[10px] font-black text-felt shadow">RENT</span>
             </div>
           )}

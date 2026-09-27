@@ -437,7 +437,7 @@ function propertyTone(color: PropertyColor) {
   const tones: Record<PropertyColor, string> = {
     brown: "#955a2a", lightblue: "#8fd3ff", pink: "#d85aa8", orange: "#f28a2e",
     red: "#d94141", yellow: "#f2ca3a", green: "#55ad62", darkblue: "#3858a8",
-    railroad: "#30343b", utility: "#59636f",
+    railroad: "#30343b", utility: "#f0fff0",
   };
   return tones[color];
 }

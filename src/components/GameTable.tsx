@@ -442,9 +442,35 @@ function propertyTone(color: PropertyColor) {
   return tones[color];
 }
 
-function rentLine(card: Card) {
+function rentLines(card: Card) {
   if (card.kind !== "property") return null;
-  return card.rents.map((r, i) => `${i + 1}:${r}M`).join("  ");
+
+  return card.rents.map((rent, i) => {
+    const isFullSet = i === card.rents.length - 1;
+
+    return (
+      <div
+        key={i}
+        className="flex items-center gap-1 text-[6px] font-bold text-felt/70"
+      >
+        <span className="w-3 shrink-0 text-center font-black">
+          {i + 1}
+        </span>
+
+        <span className="relative flex-1 border-b border-dotted border-felt/25">
+          {isFullSet && (
+            <span className="absolute bottom-0 left-1 translate-y-1/2 bg-[#f8f3e6] px-0.5 text-[5px] font-black uppercase">
+              Full Set
+            </span>
+          )}
+        </span>
+
+        <span className="w-6 shrink-0 text-right font-black">
+          {rent}M
+        </span>
+      </div>
+    );
+  });
 }
 
 function VisualCard({ card, small = false, back = false, selected = false, onClick }: {
@@ -463,23 +489,46 @@ function VisualCard({ card, small = false, back = false, selected = false, onCli
   );
 
   if (card.kind === "property") return (
-    <button onClick={onClick} style={{"--property-color": propertyTone(card.color)} as React.CSSProperties} className={`${base} property-card overflow-hidden text-left`}>
-      <div className="property-band" style={{backgroundColor: propertyTone(card.color)}}>
-        <span>{COLOR_LABEL[card.color]}</span>
+  <button
+    onClick={onClick}
+    style={{ "--property-color": propertyTone(card.color) } as React.CSSProperties}
+    className={`${base} property-card overflow-hidden text-left`}
+  >
+    <div
+      className="property-band"
+      style={{ backgroundColor: propertyTone(card.color) }}
+    >
+      <span>{COLOR_LABEL[card.color]}</span>
+    </div>
+
+    <div className="flex h-[calc(100%-38px)] flex-col justify-between p-2.5 text-felt">
+      <div>
+        <span className="block text-[10px] font-black leading-tight">
+          {card.name}
+        </span>
+
+        <span className="mt-1 block text-[7px] font-semibold text-felt/55">
+          PROPERTY
+        </span>
       </div>
-      <div className="flex h-[calc(100%-38px)] flex-col justify-between p-2.5 text-felt">
-        <div>
-          <span className="block text-[10px] font-black leading-tight">{card.name}</span>
-          <span className="mt-1 block text-[7px] font-semibold text-felt/55">PROPERTY</span>
+
+      {/* RENT TABLE */}
+      <div className="rounded-lg border border-felt/10 bg-white/70 p-1.5">
+        <div className="mb-1 text-[6px] font-bold uppercase text-felt/60">
+          Rent
         </div>
-        <div className="rounded-lg border border-felt/10 bg-white/70 p-1.5">
-          <div className="grid grid-cols-2 gap-x-1 text-[6px] font-bold text-felt/60"><span>SET</span><span className="text-right">RENT</span></div>
-          <div className="mt-0.5 text-right text-[8.5px] font-black tracking-tight">{rentLine(card)}</div>
+
+        <div className="space-y-1">
+          {rentLines(card)}
         </div>
-        <span className="self-end text-base font-black">{card.value}M</span>
       </div>
-    </button>
-  );
+
+      <span className="self-end text-base font-black">
+        {card.value}M
+      </span>
+    </div>
+  </button>
+);
 
   if (card.kind === "wildcard") {
   const isAllColors = card.colors.length > 2;

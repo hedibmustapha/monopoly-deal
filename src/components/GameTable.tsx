@@ -451,7 +451,7 @@ function rentLines(card: Card) {
     return (
       <div
         key={i}
-        className="flex items-center gap-1 text-[6px] font-bold text-felt/70"
+        className="flex items-center gap-1 text-[7px] font-bold text-felt/70"
       >
         <span className="w-3 shrink-0 text-center font-black">
           {i + 1}
@@ -459,7 +459,7 @@ function rentLines(card: Card) {
 
         <span className="relative flex-1 border-b border-dotted border-felt/25">
           {isFullSet && (
-            <span className="absolute bottom-0 left-1 translate-y-1/2 bg-[#f8f3e6] px-0.5 text-[5px] font-black uppercase">
+            <span className="absolute bottom-0 left-1 translate-y-1/2 bg-[#f8f3e6] px-0.5 text-[6px] font-black uppercase">
               Full Set
             </span>
           )}
@@ -503,9 +503,6 @@ function VisualCard({ card, small = false, back = false, selected = false, onCli
 
     <div className="flex h-[calc(100%-38px)] flex-col justify-between p-2.5 text-felt">
       <div>
-        <span className="block text-[10px] font-black leading-tight">
-          {card.name}
-        </span>
 
         <span className="mt-1 block text-[7px] font-semibold text-felt/55">
           PROPERTY

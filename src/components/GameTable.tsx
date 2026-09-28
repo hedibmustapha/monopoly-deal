@@ -458,11 +458,6 @@ function rentLines(card: Card) {
         </span>
 
         <span className="relative flex-1 border-b border-dotted border-felt/25">
-          {isFullSet && (
-            <span className="absolute bottom-0 left-1 translate-y-1/2 bg-[#f8f3e6] px-0.5 text-[6px] font-black uppercase">
-              Full Set
-            </span>
-          )}
         </span>
 
         <span className="w-6 shrink-0 text-right font-black">
@@ -706,7 +701,7 @@ function BoardView({ title, board, isOwn, targeting, onCardClick, onGroupClick }
                 className={`rounded-xl p-2 ${complete ? "bg-white/10 ring-1 ring-yellow-300/30" : "bg-black/10"} ${eligible ? "ring-2 ring-yellow-300 cursor-pointer" : ""}`}
               >
                 <button disabled={!eligible} onClick={(e) => { e.stopPropagation(); onGroupClick(color, key); }} className="mb-1 flex w-full items-center justify-between gap-2 text-left">
-                  <span className="text-[9px] font-bold uppercase tracking-wide text-white/80">{COLOR_LABEL[color]} {complete ? "✓" : ""} {group.house ? "🏠" : ""}{group.hotel ? "🏨" : ""}</span>
+                  <span className="text-[9px] font-bold uppercase tracking-wide text-white/80">{COLOR_LABEL[color]} {complete ? "✓" : ""} {group.house ? "🏠 HOUSE" : ""}{group.hotel ? "🏨 HOTEL" : ""}</span>
                   <span className="text-[9px] text-white/45">{group.cards.length}/{SET_SIZE[color]}</span>
                 </button>
                 <div className="flex -space-x-5 pl-1">

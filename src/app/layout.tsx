@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${display.variable} ${body.variable} font-body`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );

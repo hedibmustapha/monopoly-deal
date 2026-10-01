@@ -1,85 +1,229 @@
-# Monopoly Deal (private 2-player)
+# Monopoly Deal — Private 2-Player
 
-## Status
+A private, real-time 2-player Monopoly Deal-style card game built for playing remotely with a partner.
 
-**Stage 0 + 1 complete:** project scaffold, room creation, shareable join
-link/code, and a live lobby showing both players connect in real time
-(refresh-proof — reconnecting re-seats you automatically).
+## Current Status
 
-**Not built yet:** the actual card game (deck, hands, turns, action cards).
-That's Stages 2–8 of the plan — this scaffold is the foundation they get
-built on top of.
+**Playable multiplayer version**
 
-## One-time setup
+The game currently supports:
+
+- 2-player online rooms
+- Create and join games using a room code/link
+- Real-time game state synchronization
+- Refresh/reconnect support
+- Private player hands
+- Draw and play cards
+- Property sets and property wildcards
+- Bank/money management
+- Rent payments
+- Double The Rent
+- Pass Go
+- House and Hotel
+- Deal Breaker
+- Sly Deal
+- Forced Deal
+- Debt Collector
+- It's My Birthday
+- Just Say No
+- Turn and play tracking
+- Card discard rules
+- Completed property-set handling
+- Rematch / Play Again
+- Responsive card-table interface
+- Vercel Web Analytics
+
+The game is deployed on Vercel and uses Supabase for the multiplayer backend.
+
+## Play Online
+
+**[Play the game](https://monopoly-deal-psi.vercel.app/)**
+
+No local installation is required to play the deployed version.
+
+One player creates a room and shares the room code or link with the other player.
+
+## Technology
+
+- **Next.js 14**
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+- **Supabase**
+  - PostgreSQL database
+  - Realtime synchronization
+  - Anonymous authentication
+  - Row Level Security
+  - Edge Functions
+- **Vercel**
+  - Hosting
+  - Production deployments
+  - Web Analytics
+- **GitHub**
+  - Source control
+
+## Local Development
 
 ### 1. Install dependencies
 
-```bash
-npm install
-```
+    npm install
 
-### 2. Create a Supabase project
+### 2. Configure Supabase
 
-1. Go to [supabase.com](https://supabase.com) → New project (free tier is
-   plenty). Save the database password somewhere.
-2. In **Project Settings → API**, copy the **Project URL** and the
-   **anon public** key.
-3. In **Authentication → Sign In / Providers**, enable **Anonymous
-   sign-ins**. This is what gives each of you a stable identity for the
-   room/lobby (and later, for keeping your hand private) without needing
-   to make accounts.
+Create or use a Supabase project.
 
-### 3. Run the migration
+The application uses:
 
-In the Supabase dashboard, open **SQL Editor**, paste the contents of
-`supabase/migrations/0001_init.sql`, and run it. (If you'd rather use the
-Supabase CLI: `supabase link` then `supabase db push`.)
+- Supabase Database
+- Supabase Realtime
+- Anonymous Authentication
+- Supabase Edge Functions
 
-### 4. Configure environment variables
+Configure the required environment variables in `.env.local`:
 
-```bash
-cp .env.local.example .env.local
-```
+    NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-Fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` with
-the values from step 2.
+### 3. Run the development server
 
-### 5. Run it locally
+    npm run dev
 
-```bash
-npm run dev
-```
+Then open:
 
-Open two browser windows (or one normal + one incognito, so you get two
-separate anonymous sessions) at `http://localhost:3000` to try the
-create/join flow against yourself before testing with your partner.
+    http://localhost:3000
 
-## Deploying (free)
+For local multiplayer testing, use two separate browser sessions, for example:
 
-1. Push this project to a GitHub repo.
-2. Go to [vercel.com](https://vercel.com) → New Project → import the repo.
-3. In the Vercel project's environment variables, add the same two
-   `NEXT_PUBLIC_SUPABASE_*` values from your `.env.local`.
-4. Deploy. You'll get a URL like `your-app.vercel.app` — that's what you
-   share with your partner going forward instead of localhost.
+- Normal browser window
+- Incognito/private window
 
-## Project layout
+This gives each player a separate anonymous Supabase session.
 
-```
-supabase/migrations/   SQL schema, RLS policies, and RPCs (source of truth
-                        for the database — run new files here as we add
-                        the game engine)
-src/lib/supabase/       Browser Supabase client + anonymous-auth helper
-src/lib/types.ts        Shared TypeScript types
-src/app/page.tsx         Home: create or join a room
-src/app/room/[code]/     Lobby: shareable link, live player presence
-```
+## Supabase Edge Function
 
-## How privacy will work once hands exist
+The game engine uses the `game-actions` Supabase Edge Function for server-side game actions.
 
-Right now there's no private data yet — room codes and display names are
-visible to anyone who's a participant, which is fine. When Stage 3 adds
-hands, they'll live in their own table with a Row Level Security policy
-restricting `select` to `user_id = auth.uid()`, so your partner's browser
-never receives your hand's data over the network at all, not even hidden
-in a payload.
+The function handles validated game actions and updates the shared game state.
+
+When the Edge Function code is modified, deploy it with:
+
+    supabase functions deploy game-actions
+
+UI-only changes do not require redeploying the Edge Function.
+
+## Project Structure
+
+    src/
+    ├── app/
+    │   ├── page.tsx
+    │   ├── room/
+    │   │   └── [code]/
+    │   │       └── page.tsx
+    │   └── layout.tsx
+    │
+    ├── components/
+    │   └── GameTable.tsx
+    │
+    └── lib/
+        ├── deck.ts
+        └── types.ts
+
+    supabase/
+    ├── functions/
+    │   └── game-actions/
+    │       ├── index.ts
+    │       └── deck.ts
+    │
+    └── migrations/
+        └── ...
+
+## Game Architecture
+
+The application is split into two main parts.
+
+### Frontend
+
+The Next.js application provides:
+
+- Game table UI
+- Player hands
+- Cards
+- Properties and banks
+- Turn status
+- Action prompts
+- Payment selection
+- Target selection
+- Responsive layout
+
+### Backend
+
+Supabase provides:
+
+- Game rooms
+- Player identity
+- Persistent game state
+- Private hands
+- Real-time synchronization
+- Server-side game actions
+- Row Level Security
+
+Game actions are validated server-side rather than relying only on the browser.
+
+## Privacy
+
+Player hands are private.
+
+A player's hand is stored separately from the publicly visible game state and protected by Supabase Row Level Security.
+
+The application is designed so that a player does not receive the other player's private hand data.
+
+## Deployment
+
+The production application is hosted on Vercel.
+
+The repository is connected to Vercel through GitHub.
+
+A normal deployment workflow is:
+
+    GitHub
+       ↓
+    Vercel
+       ↓
+    Next.js production application
+       ↓
+    Supabase
+       ├── Database
+       ├── Realtime
+       └── game-actions Edge Function
+
+### Deploying frontend changes
+
+Push changes to the `main` branch:
+
+    git add .
+    git commit -m "Describe the change"
+    git push origin main
+
+Vercel can then build and deploy the frontend.
+
+### Deploying Edge Function changes
+
+If changes are made inside:
+
+    supabase/functions/game-actions/
+
+deploy the function separately:
+
+    supabase functions deploy game-actions
+
+## Important
+
+The production application and Supabase project contain the live multiplayer game environment.
+
+Avoid changing database schemas, RLS policies, or Edge Function logic without checking their impact on the existing game.
+
+## Development Notes
+
+This is a private 2-player project rather than a public commercial implementation.
+
+The goal is to provide a convenient online card-table experience for two people playing remotely.
